@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Tripgenic - AI Trip Planner</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Space+Grotesk:wght@500;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="style.css" />
+  <!-- Answers ko sundar format (headings, tables, lists) mein dikhane ke liye -->
+  <script src="https://cdn.jsdelivr.net/npm/marked@12.0.2/marked.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/dompurify@3.1.6/dist/purify.min.js"></script>
+</head>
+<body>
+  <header class="topbar">
+    <a class="brand" href="/" aria-label="Tripgenic home">
+      <svg width="34" height="34" viewBox="0 0 32 32" fill="none" aria-hidden="true">
+        <circle cx="16" cy="16" r="16" fill="currentColor"/>
+        <path d="M8 20c3-8 8-9 11-5s4 3 5-3" stroke="var(--surface)" stroke-width="2" stroke-linecap="round" stroke-dasharray="1 4"/>
+        <circle cx="24" cy="12" r="3" fill="var(--surface)"/>
+      </svg>
+      <span>Tripgenic</span>
+    </a>
+    <div class="actions">
+      <button id="new-chat" class="ghost-btn" type="button">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 5v14M5 12h14"/></svg>
+        <span class="hide-sm">New chat</span>
+      </button>
+      <button id="theme-toggle" class="ghost-btn icon-only" type="button" aria-label="Switch light or dark theme">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 12.8A9 9 0 1111.2 3a7 7 0 009.8 9.8z"/></svg>
+      </button>
+    </div>
+  </header>
+
+  <main id="scroll-area">
+    <div class="wrap">
+
+      <!-- Welcome screen: pehli baar dikhta hai -->
+      <section id="welcome">
+        <span class="pill">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3l2.2 5.8L20 11l-5.8 2.2L12 19l-2.2-5.8L4 11l5.8-2.2z"/></svg>
+          Your AI travel planner
+        </span>
+        <h1>Tell us where.<br /><span class="accent">We'll plan the rest.</span></h1>
+        <p class="lead">Ask in English, Hindi or Hinglish. Get day-by-day plans, budgets, stays and tips in seconds.</p>
+
+        <form id="plan-form" class="card">
+          <h2>Quick trip builder</h2>
+          <div class="grid">
+            <label>Going to
+              <input id="pf-dest" type="text" placeholder="e.g. Goa" required />
+            </label>
+            <label>Starting from
+              <input id="pf-from" type="text" placeholder="e.g. Ahmedabad" />
+            </label>
+            <label>Days
+              <input id="pf-days" type="number" min="1" max="30" value="3" required />
+            </label>
+            <label>Travellers
+              <input id="pf-people" type="number" min="1" max="20" value="2" required />
+            </label>
+            <label>Budget (₹)
+              <input id="pf-budget" type="text" inputmode="numeric" placeholder="e.g. 20000" />
+            </label>
+            <label>Style
+              <select id="pf-style">
+                <option>Budget</option>
+                <option selected>Comfortable</option>
+                <option>Luxury</option>
+                <option>Adventure</option>
+                <option>Family friendly</option>
+              </select>
+            </label>
+          </div>
+          <button type="submit" class="primary-btn">Plan my trip</button>
+        </form>
+
+        <h2 class="small-title">Or try one of these</h2>
+        <div class="suggestions">
+          <button type="button" class="suggestion" data-prompt="Plan a 5 day Kerala trip for 4 friends in December with a mid-range budget.">
+            <strong>Kerala with friends</strong><span>5 days, backwaters to hills</span>
+          </button>
+          <button type="button" class="suggestion" data-prompt="Suggest a budget weekend getaway near Ahmedabad under Rs 8000.">
+            <strong>Weekend getaway</strong><span>Near Ahmedabad, under ₹8,000</span>
+          </button>
+          <button type="button" class="suggestion" data-prompt="Plan a 7 day family trip to Rajasthan with kids. Include forts and food.">
+            <strong>Family Rajasthan</strong><span>7 days with kids</span>
+          </button>
+          <button type="button" class="suggestion" data-prompt="Best places for a honeymoon in India in winter? Give 3 options with budget.">
+            <strong>Honeymoon ideas</strong><span>3 options with budget</span>
+          </button>
+        </div>
+      </section>
+
+      <!-- Chat messages yahan aate hain -->
+      <section id="messages" aria-live="polite" aria-label="Chat messages"></section>
+    </div>
+  </main>
+
+  <form id="composer" class="composer">
+    <div class="composer-inner">
+      <label for="input" class="sr-only">Type your trip question</label>
+      <textarea id="input" rows="1" placeholder="Ask anything about your trip..." maxlength="1000"></textarea>
+      <button id="send" class="send-btn" type="submit" aria-label="Send message">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+      </button>
+    </div>
+    <p class="note">Tripgenic can make mistakes. Check prices and timings before booking.</p>
+  </form>
+
+  <script src="script.js"></script>
+</body>
+</html>

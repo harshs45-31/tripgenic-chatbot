@@ -1,0 +1,21 @@
+{
+  "name": "tripgenic",
+  "version": "2.0.0",
+  "description": "Tripgenic - AI Trip Planning Chatbot powered by Gemini",
+  "type": "module",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js"
+  },
+  "dependencies": {
+    "@google/genai": "^2.32.0",
+    "compression": "^1.7.5",
+    "dotenv": "^17.4.2",
+    "express": "^5.3.0",
+    "express-rate-limit": "^7.5.0",
+    "helmet": "^8.0.0"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC"
+}
